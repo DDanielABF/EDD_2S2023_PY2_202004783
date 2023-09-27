@@ -1,0 +1,20 @@
+digraph arbolAVL {"id:PY-101
+nombre:Tienda Online Restaurante Giovanni
+nivel:2" ;
+x1 [label="",width=.1,style=invis];
+"id:PY-101
+nombre:Tienda Online Restaurante Giovanni
+nivel:2" -> "id:PY-100
+nombre:Sistema de inventario Vestidos Julieta
+nivel:1" ;
+ "id:PY-101
+nombre:Tienda Online Restaurante Giovanni
+nivel:2" -> "id:PY-102
+nombre:Sistema de inventario EPA
+nivel:1" ;
+{rank=same"id:PY-100
+nombre:Sistema de inventario Vestidos Julieta
+nivel:1" -> "id:PY-102
+nombre:Sistema de inventario EPA
+nivel:1" [style=invis]; } 
+}
