@@ -4,9 +4,12 @@ import csv
 import json
 from arbolAVL import Arbol_AVL
 from tablaHash import TablaHash
-   
+from arbolB import ArbolB
+from ListaSimple import ListaSimple
 tablaGlobal = TablaHash()
 arbol= Arbol_AVL()
+arbolB = ArbolB() 
+Lista = ListaSimple()
 def verificar_login():
     usuario = entry_usuario.get()
     contrasena = entry_contrasena.get()
@@ -16,7 +19,7 @@ def verificar_login():
         abrir_ventana_principal()  
     elif tablaGlobal.buscar(usuario, contrasena):
         ventana_login.destroy()  
-        abrir_ventana_empleados()  
+        abrir_ventana_empleados(usuario)  
     else:
         messagebox.showerror("Error de inicio de sesión", "Credenciales incorrectas")
 
@@ -55,13 +58,14 @@ def abrir_ventana_principal():
                 next(lector_csv) 
 
                 for fila in lector_csv:
-                    id,nombre,password,puesto = fila #[FDEV-101,Cristian Suy,cris123,Frontend Developer]
+                    id,nombre,password,puesto = fila 
                     tablaGlobal.Insertar(id,nombre,password,puesto)
             AgregarTabla()
     
 
 
     def cargar_json():
+        lineas=[]
     # Abrir un cuadro de diálogo para seleccionar el archivo JSON
         archivo = filedialog.askopenfilename(filetypes=[("Archivos JSON", "*.json")])
         texto=""
@@ -72,29 +76,60 @@ def abrir_ventana_principal():
                     contenido_json = json.load(file)
                     texto_json.delete("1.0", tk.END)  # Limpiar el contenido anterior en la caja de texto
                     for i in range(len(contenido_json['Proyectos'])):
+                        arbol.Insertar(contenido_json['Proyectos'][i]['id'],contenido_json['Proyectos'][i]['nombre'],contenido_json['Proyectos'][i]['prioridad'])
+                    
+                    
+                    
+                    for i in range(len(contenido_json['Proyectos'])):
                         texto+=str(contenido_json['Proyectos'][i]['id'])+ '|'+ str(contenido_json['Proyectos'][i]['nombre'])
-                               
+                        lineas.append(str(contenido_json['Proyectos'][i]['id'])+ '|'+ str(contenido_json['Proyectos'][i]['nombre']))     
                         
                         if len(contenido_json['Proyectos'][i]['tareas']) > 0:
                             for j in range(len(contenido_json['Proyectos'][i]['tareas'])):
-                                texto+='\t'+'|'+str(contenido_json['Proyectos'][i]['tareas'][j]['nombre'])+ str(contenido_json['Proyectos'][i]['tareas'][j]['empleado']+'\n')
+                                texto+='    '+'|'+str(contenido_json['Proyectos'][i]['tareas'][j]['nombre'])+ str(contenido_json['Proyectos'][i]['tareas'][j]['empleado']+'\n')
+                                lineas.append('    '+'|'+str(contenido_json['Proyectos'][i]['tareas'][j]['nombre'])+ str(contenido_json['Proyectos'][i]['tareas'][j]['empleado']+'\n'))
                         else:
-                            texto+="\t"+"|No hay Tareas"+"\n"
-                   
-                   
-                    print(texto)
-                    texto_json.insert(tk.END, json.dumps(texto, indent=4))  # Mostrar el contenido JSON en la caja de texto
+                            texto+="    "+"|No hay Tareas"+"\n"
+                            lineas.append("    "+"|No hay Tareas"+"\n")
+
+                    txt=""
+                    for i in range(len(lineas)):
+                        txt+=lineas[i]
+                    texto_json.insert(tk.END, json.dumps(lineas, indent=4))  # Mostrar el contenido JSON en la caja de texto
                     for i in range(len(contenido_json['Proyectos'])):
-                        arbol.Insertar(contenido_json['Proyectos'][i]['id'],contenido_json['Proyectos'][i]['nombre'],contenido_json['Proyectos'][i]['prioridad'])
-            
+                            
+                        
+                        if len(contenido_json['Proyectos'][i]['tareas']) > 0:
+                            id=0
+                            for j in range(len(contenido_json['Proyectos'][i]['tareas'])):
+                                id+=1
+                                idt="T"+str(id)+"-"+str(contenido_json['Proyectos'][i]['id'])
+                                nombre=str(contenido_json['Proyectos'][i]['tareas'][j]['nombre'])
+                                encargado = str(contenido_json['Proyectos'][i]['tareas'][j]['empleado'])
+                                proyecto=str(contenido_json['Proyectos'][i]['id'])
+                                #texto+='\t'+'|'+str(contenido_json['Proyectos'][i]['tareas'][j]['nombre'])+ str(contenido_json['Proyectos'][i]['tareas'][j]['empleado']+'\n')
+                                print(idt)
+                                
+                                arbolB.insertar(idt,nombre,encargado,proyecto)
+                                print(j)
+                                print(len(contenido_json['Proyectos'][i]['tareas']))
+                        
+                        else:
+                            break
+                    
+                    
+                    
+           
+           
             except Exception as e:
                 mensaje_error.config(text=f"Error: {str(e)}")
+                print(e)
 
     def reporte_proyecto():
         arbol.graficar()
 
     def reporte_tarea():
-        print("reporte tarea")
+        arbolB.graficar()
 
 # Etiqueta para mostrar mensajes de error
     mensaje_error = tk.Label(ventana_principal, text="", fg="red")
@@ -120,7 +155,7 @@ def abrir_ventana_principal():
 #botones de reportes
     boton_reporte = tk.Button(ventana_principal, text="reporte proyectos",command=reporte_proyecto)
     boton_reporte.pack(side=tk.LEFT, padx=20)
-    boton_reporte2 = tk.Button(ventana_principal, text="reporte tareas",command=reporte_proyecto)
+    boton_reporte2 = tk.Button(ventana_principal, text="reporte tareas",command=reporte_tarea)
     boton_reporte2.pack(side=tk.LEFT, padx=20)
     boton_cerrar_sesion = tk.Button(ventana_principal, text="Cerrar Sesión", command=cerrar_sesion)
     boton_cerrar_sesion.pack(side=tk.RIGHT, padx=20)
@@ -156,9 +191,20 @@ def abrir_ventana_login():
     label_pie.pack(pady=20)
 
     ventana_login.mainloop()
-def abrir_ventana_empleados():
+def abrir_ventana_empleados(idenc):
     ventana_principal = tk.Tk()
     ventana_principal.title("Empleados")
     ventana_principal.geometry("1280x800")
-    ventana_principal.configure(bg="lightblue")
+    ventana_principal.configure(bg="yellow")
+    
+    proyectos = ["Proyecto 1", "Proyecto 2", "Proyecto 3", "Proyecto 4", "Proyecto 5"]
+    combo_proyectos = ttk.Combobox(ventana_principal, values=proyectos)
+    combo_proyectos.bind("<<ComboboxSelected>>")
+    combo_proyectos.pack(pady=20)
+    def cerrar_sesion():
+        ventana_principal.destroy()
+        abrir_ventana_login()
+    boton_cerrar_sesion = tk.Button(ventana_principal, text="Cerrar Sesión", command=cerrar_sesion)
+    boton_cerrar_sesion.pack(side=tk.RIGHT, padx=20)
+    ventana_principal.mainloop()
 abrir_ventana_login()
