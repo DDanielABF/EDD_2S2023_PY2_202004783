@@ -1,36 +1,68 @@
-digraph arbolAVL {"id:PY-101
-nombre:Tienda Online Restaurante Giovanni
-nivel:3" ;
+digraph arbolAVL {"id:PY-103
+nombre:Pizzeria Los Hermanos
+nivel:4" ;
 x1 [label="",width=.1,style=invis];
+"id:PY-103
+nombre:Pizzeria Los Hermanos
+nivel:4" -> "id:PY-101
+nombre:Tienda Online Restaurante Giovanni
+nivel:2" ;
+x2 [label="",width=.1,style=invis];
 "id:PY-101
 nombre:Tienda Online Restaurante Giovanni
-nivel:3" -> "id:PY-100
+nivel:2" -> "id:PY-100
 nombre:Sistema de inventario Vestidos Julieta
 nivel:1" ;
  "id:PY-101
 nombre:Tienda Online Restaurante Giovanni
-nivel:3" -> "id:PY-103
-nombre:Sistema de inventario Vestidos Julieta
-nivel:2" ;
-x2 [label="",width=.1,style=invis];
-"id:PY-103
-nombre:Sistema de inventario Vestidos Julieta
 nivel:2" -> "id:PY-102
 nombre:Sistema de inventario EPA
 nivel:1" ;
- "id:PY-103
-nombre:Sistema de inventario Vestidos Julieta
-nivel:2" -> "id:PY-104
-nombre:Sistema de inventario Vestidos Julieta
-nivel:1" ;
-{rank=same"id:PY-102
-nombre:Sistema de inventario EPA
-nivel:1" -> "id:PY-104
-nombre:Sistema de inventario Vestidos Julieta
-nivel:1" [style=invis]; } 
 {rank=same"id:PY-100
 nombre:Sistema de inventario Vestidos Julieta
-nivel:1" -> "id:PY-103
-nombre:Sistema de inventario Vestidos Julieta
+nivel:1" -> "id:PY-102
+nombre:Sistema de inventario EPA
+nivel:1" [style=invis]; } 
+ "id:PY-103
+nombre:Pizzeria Los Hermanos
+nivel:4" -> "id:PY-105
+nombre:Venta de Repuestos Gomez
+nivel:3" ;
+x2 [label="",width=.1,style=invis];
+"id:PY-105
+nombre:Venta de Repuestos Gomez
+nivel:3" -> "id:PY-104
+nombre:Servicio de Cable
+nivel:1" ;
+ "id:PY-105
+nombre:Venta de Repuestos Gomez
+nivel:3" -> "id:PY-107
+nombre:Fruta Organica Jessi
+nivel:2" ;
+x3 [label="",width=.1,style=invis];
+"id:PY-107
+nombre:Fruta Organica Jessi
+nivel:2" -> "id:PY-106
+nombre:Bufete Juridico MyM Asociados
+nivel:1" ;
+ "id:PY-107
+nombre:Fruta Organica Jessi
+nivel:2" -> "id:PY-108
+nombre:Pasteleria Queen's
+nivel:1" ;
+{rank=same"id:PY-106
+nombre:Bufete Juridico MyM Asociados
+nivel:1" -> "id:PY-108
+nombre:Pasteleria Queen's
+nivel:1" [style=invis]; } 
+{rank=same"id:PY-104
+nombre:Servicio de Cable
+nivel:1" -> "id:PY-107
+nombre:Fruta Organica Jessi
 nivel:2" [style=invis]; } 
+{rank=same"id:PY-101
+nombre:Tienda Online Restaurante Giovanni
+nivel:2" -> "id:PY-105
+nombre:Venta de Repuestos Gomez
+nivel:3" [style=invis]; } 
 }

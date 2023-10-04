@@ -9,7 +9,7 @@ from ListaSimple import ListaSimple
 tablaGlobal = TablaHash()
 arbol= Arbol_AVL()
 arbolB = ArbolB() 
-Lista = ListaSimple()
+listaS = ListaSimple()
 def verificar_login():
     usuario = entry_usuario.get()
     contrasena = entry_contrasena.get()
@@ -40,6 +40,7 @@ def abrir_ventana_principal():
 
     def AgregarTabla():
         tabla.delete(*tabla.get_children())
+        
         for clave, valor in tablaGlobal.tabla.items():
             print(f"Clave: {clave}, Valor: {valor.codigo}")
             tabla.insert("", "end", values=(clave, valor.codigo, valor.nombre, valor.puesto))
@@ -108,14 +109,13 @@ def abrir_ventana_principal():
                                 encargado = str(contenido_json['Proyectos'][i]['tareas'][j]['empleado'])
                                 proyecto=str(contenido_json['Proyectos'][i]['id'])
                                 #texto+='\t'+'|'+str(contenido_json['Proyectos'][i]['tareas'][j]['nombre'])+ str(contenido_json['Proyectos'][i]['tareas'][j]['empleado']+'\n')
-                                print(idt)
+                                #print(idt)
                                 
                                 arbolB.insertar(idt,nombre,encargado,proyecto)
-                                print(j)
-                                print(len(contenido_json['Proyectos'][i]['tareas']))
+                                
                         
                         else:
-                            break
+                            print("proyecto vacio")
                     
                     
                     
@@ -192,15 +192,43 @@ def abrir_ventana_login():
 
     ventana_login.mainloop()
 def abrir_ventana_empleados(idenc):
+    #listaS.eliminar()
+    lista=[]
+    listaS = arbolB.Buscar(idenc)
+    
     ventana_principal = tk.Tk()
     ventana_principal.title("Empleados")
     ventana_principal.geometry("1280x800")
     ventana_principal.configure(bg="yellow")
-    
-    proyectos = ["Proyecto 1", "Proyecto 2", "Proyecto 3", "Proyecto 4", "Proyecto 5"]
+    etiqueta_identificacion = tk.Label(ventana_principal, text=idenc)
+    etiqueta_identificacion.pack(side=tk.RIGHT, padx=10, pady=5)
+    matriz=[]
+    Proyectos=[]
+    matriz = listaS.imprimir()
+    proyectos = listaS.proyectos()
+    #proyectos = ["Proyecto 1", "Proyecto 2", "Proyecto 3", "Proyecto 4", "Proyecto 5"]
     combo_proyectos = ttk.Combobox(ventana_principal, values=proyectos)
     combo_proyectos.bind("<<ComboboxSelected>>")
     combo_proyectos.pack(pady=20)
+    tabla = ttk.Treeview(ventana_principal, columns=("Columna1", "Columna2", "Columna3"))
+    tabla.heading("#1", text="Codigo de Tarea")
+    tabla.heading("#2", text="Nombre de Proyecto")
+    tabla.heading("#3", text="Nombre de la Tarea")
+    
+
+    def AgregarTabla():
+        tabla.delete(*tabla.get_children())
+        
+        for i in range(len(matriz)):
+            
+            
+            tabla.insert("", "end", values=( matriz[i][0], matriz[i][1], matriz[i][2]))
+        
+            
+
+    
+    AgregarTabla()
+    tabla.pack(pady=15)
     def cerrar_sesion():
         ventana_principal.destroy()
         abrir_ventana_login()

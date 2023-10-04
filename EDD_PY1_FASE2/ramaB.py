@@ -11,7 +11,7 @@ class RamaB():
             self.primero = nuevo
             self.contador += 1
         else:
-            if nuevo.valor < self.primero.valor: #comparar codigo de tareas
+            if nuevo.valor < self.primero.valor: 
                 nuevo.siguiente = self.primero
                 if self.primero is not None:
                     self.primero.anterior = nuevo

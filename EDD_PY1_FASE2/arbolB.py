@@ -1,5 +1,6 @@
 from nodoB import NodoB
 from ramaB import RamaB
+from ListaSimple import ListaSimple
 import os
 
 class ArbolB():
@@ -7,23 +8,7 @@ class ArbolB():
         self.orden = 3
         self.raiz: RamaB = None
     
-    def buscar(self, id_encargado, lista_resultado):
-        if self.raiz is not None:
-            self._buscar_y_agregar_por_idencargado_recursivo(self.raiz.primero, id_encargado, lista_resultado)
-
-    def buscar_recursivo(self, nodo_actual, id_encargado, lista_resultado):
-        if nodo_actual is None:
-            return
-
-        if id_encargado == nodo_actual.idencargado:
-            lista_resultado.agregar(nodo_actual)
-        
-        if id_encargado <= nodo_actual.idencargado:
-            self._buscar_y_agregar_por_idencargado_recursivo(nodo_actual.izquierda.primero, id_encargado, lista_resultado)
-        
-        self._buscar_y_agregar_por_idencargado_recursivo(nodo_actual.siguiente, id_encargado, lista_resultado)
-
-
+   
 
 
 
@@ -51,9 +36,9 @@ class ArbolB():
         else:
             temp:NodoB = rama.primero
             while temp is not None:
-                if nodo.valor == temp.valor: #comparar codigo de tareas
+                if nodo.valor == temp.valor: 
                     return None
-                elif nodo.valor < temp.valor: #comparar codigo de tareas
+                elif nodo.valor < temp.valor: 
                     obj:NodoB = self.insertar_rama(nodo, temp.izquierda)
                     if obj is not None:
                         rama.insertar(obj)
@@ -157,9 +142,9 @@ class ArbolB():
                     dot = dot + "<C" + str(r) + ">|"
                     r += 1
                 if aux.siguiente is not None:
-                    dot = dot + str(aux.id) + "|" #Cambio de valores
+                    dot = dot + str(aux.id)+"  \n"+str(aux.idencargado)+"  \n"+str(aux.idproyecto) + "|" #Cambio de valores
                 else:
-                    dot = dot + str(aux.id) #cambio de Valores
+                    dot = dot + str(aux.id)+"  \n"+str(aux.idencargado)+"  \n"+str(aux.idproyecto) + "|" #cambio de Valores
                     if aux.derecha is not None:
                         dot = dot + "|<C" + str(r) + ">"
                 aux = aux.siguiente
@@ -184,3 +169,39 @@ class ArbolB():
                         dot += self.conexionRamas(aux.derecha.primero)
                 aux = aux.siguiente
         return dot
+    
+    def Buscar(self,idencargado):
+        lista = ListaSimple()
+        lista = self.GrafoBuscar(self.raiz.primero,idencargado,lista)
+        return lista
+    def GrafoBuscar(self, rama:NodoB,idencargado, lista:ListaSimple):
+        
+        if rama is not None:
+            self.GrafoRamasBuscar(rama,idencargado,lista)
+            aux:NodoB = rama
+            while aux is not None:
+                if aux.izquierda is not None:
+                    self.GrafoBuscar(aux.izquierda.primero,idencargado,lista)
+                if aux.siguiente is None:
+                    if aux.derecha is not None:
+                        self.GrafoBuscar(aux.derecha.primero,idencargado,lista)
+                aux = aux.siguiente
+        return lista
+
+    def GrafoRamasBuscar(self, rama:NodoB,idencargado, lista:ListaSimple):
+        dot = ''
+        if rama is not None:
+            aux:NodoB = rama
+            
+            while aux is not None:
+                
+                    
+                if aux.siguiente is not None and aux.idencargado==idencargado:
+                    dot = dot + str(aux.id)+"  \n"+str(aux.idencargado)+"  \n"+str(aux.idproyecto) + "|" #Cambio de valores
+                    lista.agregar(aux.id,aux.nombre,aux.idproyecto)
+                else:
+                    if aux.derecha is not None and aux.idencargado==idencargado :
+                        lista.agregar(aux.id,aux.nombre,aux.idproyecto)
+                aux = aux.siguiente
+            
+        #return lista
