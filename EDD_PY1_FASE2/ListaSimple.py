@@ -35,5 +35,21 @@ class ListaSimple():
         print("None")
         return matriz
 
+    def imprimirP(self,nombrep):
+        matriz=[]
+        lista=[]
+        actual = self.cabeza
+        while actual:
+            if actual.nombreT == nombrep:
+                lista=[]
+                lista.append(actual.idTarea)
+                lista.append(actual.nombreT)
+                lista.append(actual.nombreP)
+                matriz.append(lista)
+                print(actual.idTarea+"\n"+actual.nombreT+"\n"+actual.nombreP, end=" -> ")
+            actual = actual.siguiente
+        print("None")
+        return matriz
+  
     def eliminar(self):
         self.cabeza = None

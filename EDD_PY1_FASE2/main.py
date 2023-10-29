@@ -17,7 +17,7 @@ def verificar_login():
     if usuario == "202004783" and contrasena == "admin":
         ventana_login.destroy() 
         abrir_ventana_principal()  
-    elif tablaGlobal.buscar(usuario, contrasena):
+    elif tablaGlobal.buscarMejorado(usuario, contrasena):
         ventana_login.destroy()  
         abrir_ventana_empleados(usuario)  
     else:
@@ -206,9 +206,20 @@ def abrir_ventana_empleados(idenc):
     Proyectos=[]
     matriz = listaS.imprimir()
     proyectos = listaS.proyectos()
+    def AgregarTablap(event):
+        print(combo_proyectos.get())
+        matrix=[]
+        nombrep = combo_proyectos.get()
+        matrix = listaS.imprimirP(nombrep)
+        tabla.delete(*tabla.get_children())
+        
+        for i in range(len(matrix)):
+            
+            
+            tabla.insert("", "end", values=( matrix[i][0], matrix[i][1], matrix[i][2]))
     #proyectos = ["Proyecto 1", "Proyecto 2", "Proyecto 3", "Proyecto 4", "Proyecto 5"]
     combo_proyectos = ttk.Combobox(ventana_principal, values=proyectos)
-    combo_proyectos.bind("<<ComboboxSelected>>")
+    
     combo_proyectos.pack(pady=20)
     tabla = ttk.Treeview(ventana_principal, columns=("Columna1", "Columna2", "Columna3"))
     tabla.heading("#1", text="Codigo de Tarea")
@@ -216,18 +227,19 @@ def abrir_ventana_empleados(idenc):
     tabla.heading("#3", text="Nombre de la Tarea")
     
 
-    def AgregarTabla():
-        tabla.delete(*tabla.get_children())
+   
         
+            
+
+    def AgregarTabla():
         for i in range(len(matriz)):
             
             
             tabla.insert("", "end", values=( matriz[i][0], matriz[i][1], matriz[i][2]))
-        
-            
-
-    
     AgregarTabla()
+    combo_proyectos.bind("<<ComboboxSelected>>",AgregarTablap)
+    
+
     tabla.pack(pady=15)
     def cerrar_sesion():
         ventana_principal.destroy()

@@ -73,12 +73,25 @@ class TablaHash():
     
     def buscar(self, codigo, password):
         indice = self.calculoIndice(codigo)
+        #for i in self.tabla:
+           # print(self.tabla[i].)
         if indice < self.capacidad:
             try:
                 if (indice in self.tabla):
                     empleado =  self.tabla[indice]
+                    print(empleado.codigo)
                     if empleado.codigo == codigo and empleado.password == password:
                         return True
+                    else:
+                        contador = 1
+                        indice = self.reCalculoIndice(codigo, contador)
+                        while not (indice in self.tabla):
+                            contador += 1
+                            indice = self.reCalculoIndice(codigo, contador)
+                            empleado =  self.tabla[indice]
+                            if empleado.codigo == codigo and empleado.password == password:
+                                return True
+                        
                 elif not (indice in self.tabla):
                     return False
                 else:
@@ -93,3 +106,41 @@ class TablaHash():
             except:
                 print("Error")
         return False
+    def buscarMejorado(self, codigo, password):
+        indice = self.calculoIndice(codigo)
+    
+        if indice < self.capacidad:
+            try:
+                if indice in self.tabla:
+                    empleado = self.tabla[indice]
+                    if empleado.codigo == codigo and empleado.password == password:
+                        return True
+                    else:
+                        contador = 1
+                        indice = self.reCalculoIndice(codigo, contador)
+                        while indice  in self.tabla:
+                            empleado = self.tabla[indice]
+                            if empleado.codigo == codigo and empleado.password == password:
+                                return True
+                            contador += 1
+                            indice = self.reCalculoIndice(codigo, contador)
+                else:
+                    contador = 1
+                    indice = self.reCalculoIndice(codigo, contador)
+                    while indice  in self.tabla:
+                        empleado = self.tabla[indice]
+                        if empleado.codigo == codigo and empleado.password == password:
+                            return True
+                        contador += 1
+                        indice = self.reCalculoIndice(codigo, contador)
+                        
+            except:
+                print("Error")
+    
+        return False
+#En esta versión, se elimina el elif y el manejo de que el índice no esté en self.tabla se coloca directamente en el bloque else. Esto debería solucionar el problema y permitir que la lógica funcione correctamente.
+
+
+
+
+
