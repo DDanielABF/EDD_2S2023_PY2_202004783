@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 import csv
 import json
+import hashlib
 from arbolAVL import Arbol_AVL
 from tablaHash import TablaHash
 from arbolB import ArbolB
@@ -10,6 +11,22 @@ tablaGlobal = TablaHash()
 arbol= Arbol_AVL()
 arbolB = ArbolB() 
 listaS = ListaSimple()
+
+def sha256(text):
+  """
+  Encripta una cadena de texto utilizando el método de encriptación SHA-256.
+
+  Args:
+    text: La cadena de texto a encriptar.
+    salt: La sal a utilizar.
+
+  Returns:
+    La cadena encriptada.
+  """
+
+  hash_object = hashlib.sha256()
+  hash_object.update((text).encode())
+  return hash_object.hexdigest()
 def verificar_login():
     usuario = entry_usuario.get()
     contrasena = entry_contrasena.get()
@@ -17,7 +34,7 @@ def verificar_login():
     if usuario == "202004783" and contrasena == "admin":
         ventana_login.destroy() 
         abrir_ventana_principal()  
-    elif tablaGlobal.buscarMejorado(usuario, contrasena):
+    elif tablaGlobal.buscarMejorado(usuario, sha256(contrasena)):
         ventana_login.destroy()  
         abrir_ventana_empleados(usuario)  
     else:
@@ -32,9 +49,10 @@ def abrir_ventana_principal():
     etiqueta_identificacion.pack(pady=2)
     etiqueta_identificacion = tk.Label(ventana_principal, text="202004783-Daniel Barrera")
     etiqueta_identificacion.pack(side=tk.RIGHT, padx=10, pady=5)
-    tabla = ttk.Treeview(ventana_principal, columns=("Columna1", "Columna2", "Columna3", "Columna4"))
+    tabla = ttk.Treeview(ventana_principal, columns=("Columna1", "Columna2", "Columna3","Columna4", "Columna5"))
     tabla.heading("#1", text="No.")
     tabla.heading("#2", text="Codigo Empleado")
+    tabla.heading("#3", text="password")
     tabla.heading("#3", text="Nombre")
     tabla.heading("#4", text="Puesto")
 
@@ -43,7 +61,7 @@ def abrir_ventana_principal():
         
         for clave, valor in tablaGlobal.tabla.items():
             print(f"Clave: {clave}, Valor: {valor.codigo}")
-            tabla.insert("", "end", values=(clave, valor.codigo, valor.nombre, valor.puesto))
+            tabla.insert("", "end", values=(clave, valor.codigo,valor.password, valor.nombre, valor.puesto))
 
     if tablaGlobal.utilizacion > 0:
         AgregarTabla()
@@ -60,7 +78,7 @@ def abrir_ventana_principal():
 
                 for fila in lector_csv:
                     id,nombre,password,puesto = fila 
-                    tablaGlobal.Insertar(id,nombre,password,puesto)
+                    tablaGlobal.Insertar(id,nombre,sha256(password),puesto)
             AgregarTabla()
     
 
